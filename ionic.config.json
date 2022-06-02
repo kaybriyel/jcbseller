@@ -1,0 +1,7 @@
+{
+  "name": "jcbseller",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

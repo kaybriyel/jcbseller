@@ -19,8 +19,8 @@ export class LoginPage implements OnInit {
   ngOnInit() {}
 
   get ok() {
-    let ok = this.credential.email && this.credential.password
-    if(ok) ok = (this.credential.email.length > 10) && (this.credential.password.length >= 8)
+    let ok = this.credential.username && this.credential.password
+    if(ok) ok = (this.credential.username.length >= 5) && (this.credential.password.length >= 8)
     return ok
   }
 

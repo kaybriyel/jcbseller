@@ -42,7 +42,7 @@ export class AuthenticationService {
       this.storage.saveLocal('USER_INFO', userInfo)
       this.ifLoggedIn()
     } else {
-      (await this.toastController.create({ message })).present()
+      (await this.toastController.create({ message, duration: 2000 })).present()
     }
   }
 
@@ -54,7 +54,7 @@ export class AuthenticationService {
       this.router.navigate(['login']);
       this.authState.next(false);
     } else {
-      (await this.toastController.create({ message, duration: 2000 })).present()
+      (await this.toastController.create({ message })).present()
     }
   }
 

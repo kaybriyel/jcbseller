@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { IonModal } from '@ionic/angular';
+import { IonInput, IonModal } from '@ionic/angular';
 import { Cake } from 'src/app/pages/cakes/cakes.page';
 import { ApiService, APP_API_PATH } from 'src/app/services/api.service';
 import { StorageService } from 'src/app/services/storage.service';
@@ -78,7 +78,8 @@ export class OrderCake {
   styleUrls: ['./ordercake.component.scss'],
 })
 export class OrdercakeComponent implements OnInit {
-  @ViewChild('createSupplier', {read: ElementRef}) createSupplierBtn: ElementRef;
+  @ViewChild('inputOrder', {read: IonInput}) inputOrder: IonInput;
+  @ViewChild('inputRemain', {read: IonInput}) inputRemain: IonInput;
   
   modal: IonModal
   ordercake: OrderCake
@@ -93,6 +94,11 @@ export class OrdercakeComponent implements OnInit {
     this.ordercake = new OrderCake
     this.prev = new OrderCake
     this.loadData()
+  }
+
+  ionViewDidEnter() {
+    if(!this.ordercake.qty_order) this.inputOrder.setFocus()
+    else this.inputRemain.setFocus()
   }
 
   async loadData() {

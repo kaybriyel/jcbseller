@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { IonModal, NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-total',
@@ -8,8 +9,9 @@ import { Component, OnInit } from '@angular/core';
 export class TotalComponent implements OnInit {
 
   note: any
-
-  constructor() { }
+  modal: IonModal
+  constructor(
+  ) { }
 
   ngOnInit() {
     this.note = {}
@@ -18,5 +20,10 @@ export class TotalComponent implements OnInit {
 
   async loadData() {
     
+  }
+
+  back() {
+    this.modal.canDismiss = true
+    this.modal.dismiss()
   }
 }

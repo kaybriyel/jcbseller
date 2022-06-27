@@ -34,14 +34,14 @@ export class FormsPage implements OnInit {
   }
 
   async getData() {
-    const res = await this.apiService.get(APP_API_PATH + 'data?for_page=forms')
+    const res = await this.apiService.get(APP_API_PATH + 'data?for_page=forms&except[]=order_cakes')
     const json = await res.json()
     this.data = json.data
     console.log(this.data)
   }
 
   async openOrderformPage(form) {
-    await this.storage.saveSession('note_id', form.id)
+    await this.storage.saveSession('note', form)
     this.navCtrl.navigateForward('/orderform')
   }
 
@@ -61,7 +61,7 @@ export class FormsPage implements OnInit {
     if(res.ok) {
       const json = await res.json()
       const form = json.data
-      await this.storage.saveSession('note_id', form.id)
+      await this.storage.saveSession('note', form)
       this.data.list.push(form)
       this.navCtrl.navigateForward('/orderform')
       this.data.isOrdered = true

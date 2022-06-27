@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { IonSearchbar } from '@ionic/angular';
 import { ApiService, APP_API_PATH } from 'src/app/services/api.service';
 
 interface ResponseData {
@@ -20,7 +21,7 @@ export class Cake {
   styleUrls: ['./cakes.page.scss'],
 })
 export class CakesPage implements OnInit {
-
+@ViewChild('searchBar', { read: IonSearchbar }) searchBar: IonSearchbar
   data: ResponseData
   displayData: ResponseData
   selectedPrice: number | string
@@ -28,6 +29,7 @@ export class CakesPage implements OnInit {
 
   searchValue:string
   searchEnable: boolean = false
+  searchTimeout: any
 
   constructor(private api: ApiService) { }
 
@@ -104,5 +106,15 @@ export class CakesPage implements OnInit {
 
   toggleSearch() {
     this.searchEnable = !this.searchEnable
+    clearTimeout(this.searchTimeout)
+    if(this.searchEnable) {
+      this.searchTimeout = setTimeout(() => this.searchBar.setFocus(), 300)
+    } else {
+      this.searchValue = ''
+    }
+  }
+
+  filterCake(list) {
+    return list.filter(d => d.name.replace(/ /g, '').toLowerCase().includes(this.searchValue.replace(/ /g, '').toLowerCase()))
   }
 }

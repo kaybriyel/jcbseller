@@ -1,0 +1,43 @@
+<ion-header #header class="ion-no-border fixed" style="background-color: #fff; --background-image: url({{ ordercake.cake?.img }})">
+  <ion-toolbar>
+    <ion-icon slot="start" class="back-btn" name="chevron-back-outline" (click)="back()"></ion-icon>
+    <ion-title class="ion-no-padding">{{ ordercake.cake?.name }}</ion-title>
+  </ion-toolbar>
+  <div class="cake-price-wrapper">
+    <ion-text color="success">
+      <h5 class="ion-no-margin price">{{ ordercake.price_sale }} ៛</h5>
+    </ion-text>
+  </div>
+</ion-header>
+
+<ion-content #content [scrollEvents]="true" (ionScrollStart)="scrollStart()" (ionScroll)="scrolling($event)"
+  (ionScrollEnd)="scrollEnd()">
+
+  <div style="height: 4vh;"></div>
+
+  <ion-item lines="none">
+    <ion-label class="input-label" position="stacked">Quantity Order</ion-label>
+    <ion-input type="number" class="radius mt-15" (ionChange)="ordercake.update()"  [(ngModel)]="ordercake.qty_order"></ion-input>
+  </ion-item>
+
+  <ion-item *ngIf="inputRemainVisible" lines="none">
+    <ion-label class="input-label" position="stacked">Quantity Remain</ion-label>
+    <ion-input type="number" class="radius mt-15" (ionInput)="input($event)" (ionChange)="ordercake.update()" [(ngModel)]="ordercake.qty_remain"></ion-input>
+  </ion-item>
+
+  <ion-item *ngIf="qtySoldVisible" lines="none">
+    <ion-label class="input-label" position="stacked">Quantity Sold</ion-label>
+    <ion-input disabled type="number" class="radius mt-15" [(ngModel)]="ordercake.qty_sold"></ion-input>
+  </ion-item>
+
+  <ion-item *ngIf="amountSoldVisible" lines="none">
+    <ion-label class="input-label" position="stacked">Amount Sold</ion-label>
+    <ion-input disabled type="number" class="radius mt-15" [(ngModel)]="ordercake.amount_sold"></ion-input>
+  </ion-item>
+  
+  <div slot="fixed"
+    style="bottom: 0; width: 100%; padding: 16px 16px; background: #fff">
+    <ion-button disabled="{{!isModified}}" (click)="done()" style="height:60px; --border-radius: 16px" class="add_to_cart_btn" shape="round" expand="full"
+      color="success">DONE</ion-button>
+  </div>
+</ion-content>

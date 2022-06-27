@@ -1,9 +1,53 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Cakes</ion-title>
+    <ion-title *ngIf="!searchEnable && !selectList.size">Cakes</ion-title>
+    <ion-title (click)="toggleSelectAll(selectedPrice)" *ngIf="!searchEnable && selectList.size">
+      <ion-checkbox [checked]="isSelectedAll(selectedPrice)"
+        style="margin-right: 16px"></ion-checkbox>
+      <span>{{ selectList.size }} Selected</span>
+    </ion-title>
+    <ion-icon *ngIf="!searchEnable" slot="end" class="search-btn" name="search" (click)="toggleSearch()"></ion-icon>
+    <ion-searchbar class="round pl pr" #searchBar *ngIf="searchEnable" [(ngModel)]="searchValue" [debounce]="250"></ion-searchbar>
+    <ion-icon *ngIf="searchEnable" slot="end" class="close-btn" name="close" (click)="toggleSearch()"></ion-icon>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment scrollable value="{{selectedPrice}}" (ionChange)="segmentChanged($event)">
+      <ion-segment-button value="all">
+        <ion-label>All</ion-label>
+      </ion-segment-button>
+      <ion-segment-button (click)="scrollIntoView($event)" *ngFor="let price of data.price_list" value="{{price}}">
+        <ion-label>{{price}}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content shape="round">
+  <ion-list *ngFor="let price of displayData.price_list">
+    <ion-list-header *ngIf="selectedPrice === 'all'">
+      <ion-label style="font-weight: 600; font-size:large">{{ price }}</ion-label>
+      <ion-button *ngIf="selectList.size && isSelectedAll(price)" (click)="deSelectAll(price)">Deselect All</ion-button>
+      <ion-button *ngIf="selectList.size && !isSelectedAll(price)" (click)="selectAll(price)">Select All</ion-button>
+    </ion-list-header>
+    <ion-item button *ngFor="let cake of data.group_by_price[price]">
+      <ion-checkbox *ngIf="selectList.size" checked="{{selectList.has(cake.id)}}" slot="start"></ion-checkbox>
+      <!-- <ion-avatar class="avatar-80" slot="start">
+        <img [src]="cake.img" />
+      </ion-avatar> -->
+      <ion-thumbnail class="thumbnail-80">
+        <img [src]="cake.img" />
+      </ion-thumbnail>
+      <ion-label>
+        <h2 style="font-weight: 500;">{{ cake.name }}</h2>
+        <span>{{ cake.riel_price }}</span>
+      </ion-label>
+    </ion-item>
+  </ion-list>
 
+  <div *ngIf="selectList.size" style="height: 56px;"></div>
+  <ion-fab *ngIf="selectList.size" vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="success">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

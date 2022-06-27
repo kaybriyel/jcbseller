@@ -1,0 +1,43 @@
+<ion-header #header class="ion-no-border fixed" style="background-color: #fff;">
+  <ion-toolbar>
+    <ion-icon slot="start" class="back-btn" name="chevron-back-outline" (click)="back()"></ion-icon>
+    <ion-title class="ion-no-padding">Total</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content #content [scrollEvents]="true" (ionScrollStart)="scrollStart()" (ionScroll)="scrolling($event)"
+  (ionScrollEnd)="scrollEnd()">
+
+  <div style="height: 4vh;"></div>
+
+  <ion-item lines="none">
+    <ion-label class="input-label" position="stacked">Total Quantity Order</ion-label>
+    <ion-input type="number" disabled class="radius mt-15" [ngModel]="note.qty_order"></ion-input>
+  </ion-item>
+
+  <ion-item lines="none">
+    <ion-label class="input-label" position="stacked">Total Quantity Remain</ion-label>
+    <ion-input type="number" disabled class="radius mt-15" [ngModel]="note.qty_remain"></ion-input>
+  </ion-item>
+
+  <ion-item lines="none">
+    <ion-label class="input-label" position="stacked">Total Quantity Sold</ion-label>
+    <ion-input disabled type="number" class="radius mt-15" [ngModel]="note.qty_sold"></ion-input>
+  </ion-item>
+
+  <ion-item lines="none">
+    <ion-label class="input-label" position="stacked">Total Amount Sold</ion-label>
+    <ion-input disabled type="number" class="radius mt-15" [ngModel]="note.amount_sold"></ion-input>
+  </ion-item>
+
+  <ion-item lines="none">
+    <ion-label class="input-label" position="stacked">Actual Amount Sold</ion-label>
+    <ion-input disabled type="number" class="radius mt-15" [(ngModel)]="note.amount_sold"></ion-input>
+  </ion-item>
+  
+  <div slot="fixed"
+    style="bottom: 0; width: 100%; padding: 16px 16px; background: #fff">
+    <ion-button disabled="{{!isModified}}" (click)="done()" style="height:60px; --border-radius: 16px" class="add_to_cart_btn" shape="round" expand="full"
+      color="success">DONE</ion-button>
+  </div>
+</ion-content>

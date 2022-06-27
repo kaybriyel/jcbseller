@@ -1,0 +1,94 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-icon slot="start" class="back-btn" name="chevron-back-outline" (click)="back()"></ion-icon>
+    <ion-segment style="margin-left: 16px;" mode="ios" (ionChange)="dataSegmentChanged($event)" [value]="selectedData">
+      <ion-segment-button value="orders">Orders</ion-segment-button>
+      <ion-segment-button value="cakes">Cakes</ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment scrollable value="{{selectedPrice}}" (ionChange)="priceSegmentChanged($event)">
+      <ion-segment-button value="all">
+        <ion-label>All</ion-label>
+      </ion-segment-button>
+      <ion-segment-button (click)="scrollIntoView($event)" *ngFor="let price of displayPriceList" value="{{price}}">
+        <ion-label>{{price}}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<!-- cake list -->
+<ion-content *ngIf="selectedData === 'cakes'">
+  <ion-list *ngFor="let price of displayCakeData.price_list">
+    <ion-list-header *ngIf="selectedPrice === 'all'">
+      <ion-label style="font-weight: 600; font-size: large;">{{ price }}</ion-label>
+    </ion-list-header>
+    <ion-item-sliding *ngFor="let cake of displayCakeData.group_by_price[price]">
+      <ion-item (click)="cakeClick($event, cake)" button>
+        <!-- <ion-avatar class="avatar-80" slot="start">
+          <img [src]="cake.img" />
+        </ion-avatar> -->
+        <ion-thumbnail class="thumbnail-80">
+          <img [src]="cake.img" />
+        </ion-thumbnail>
+        <ion-label>
+          <h2 style="font-weight: 500;">{{ cake.name }}</h2>
+          <span>{{ cake.riel_price }}</span>
+        </ion-label>
+      </ion-item>
+    </ion-item-sliding>
+  </ion-list>
+</ion-content>
+<!-- /cake list -->
+
+<!-- order list -->
+<ion-content *ngIf="selectedData === 'orders'">
+  <ion-list *ngFor="let price of displayOrderData.price_list">
+    <ion-list-header *ngIf="selectedPrice === 'all'">
+      <ion-label style="font-weight: 600; font-size: large;">{{ price }}</ion-label>
+    </ion-list-header>
+    <ion-item-sliding *ngFor="let ordercake of displayOrderData.group_by_price[price]">
+      <ion-item (click)="ordercakeClick($event, ordercake)" button>
+        <!-- <ion-avatar class="avatar-80" slot="start">
+          <img [src]="cake.img" />
+        </ion-avatar> -->
+        <ion-thumbnail class="thumbnail-80">
+          <img [src]="ordercake.cake.img" />
+        </ion-thumbnail>
+        <ion-label>
+          <h2 style="font-weight: 500;">{{ ordercake.cake.name }}</h2>
+          <div style="display: flex; justify-content: space-between">
+            <h2>{{ ordercake.price_sale }}</h2>
+            <span>{{ ordercake.amount_sold }}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between">
+            <span>{{ ordercake.qty_order }}</span>
+            <span>{{ ordercake.qty_remain }}</span>
+            <span>{{ ordercake.qty_sold }}</span>
+          </div>
+        </ion-label>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-item-option (click)="removeOrdercake(ordercake)" color="danger">
+          <ion-icon name="trash" size="large"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+</ion-content>
+<!-- /order list -->
+
+<ion-footer *ngIf="selectedData === 'orders'" class="ion-padding">
+  <ion-toolbar (click)="openTotal()">
+    <ion-title class="ion-text-center" style="margin-bottom: 16px">Total</ion-title>
+    <ion-label>
+      <div style="display: flex; justify-content: space-between">
+        <span>1000</span>
+        <span>1000</span>
+        <span>1000</span>
+        <span>100000</span>
+      </div>
+    </ion-label>
+  </ion-toolbar>
+</ion-footer>

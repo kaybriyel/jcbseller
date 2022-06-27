@@ -1,0 +1,16 @@
+### seller a login
+POST https://jcbakery.herokuapp.com/api/baker_assistant/login HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "email": "kaybriyel@gmail.com",
+  "password": "yel-seller"
+  // 36|yLtmpUdSe3hw6JJdvB5e2ugu3CyEsQS3ZfHVZfNY
+}
+
+###
+
+GET https://jcbakery.herokuapp.com/api/cakes HTTP/1.1
+Accept: application/json
+Authorization: Bearer 36|yLtmpUdSe3hw6JJdvB5e2ugu3CyEsQS3ZfHVZfNY

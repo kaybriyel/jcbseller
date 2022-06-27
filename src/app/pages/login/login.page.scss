@@ -1,0 +1,16 @@
+ion-content {
+    --background: #fff;
+
+    .login-form {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        padding-bottom: 16px;
+
+        ion-button {
+            height: 50px;
+            margin-left: 16px;
+            margin-right: 16px;
+        }
+    }
+}

@@ -42,7 +42,7 @@ export class FormsPage implements OnInit {
 
   async openOrderformPage(form) {
     await this.storage.saveSession('note', form)
-    this.navCtrl.navigateForward('/orderform')
+    this.navCtrl.navigateBack('/orderform')
   }
 
   async delete(id) {
@@ -65,6 +65,18 @@ export class FormsPage implements OnInit {
       this.data.list.push(form)
       this.navCtrl.navigateForward('/orderform')
       this.data.isOrdered = true
+    }
+  }
+
+  async submit(f, itemSliding) {
+    const form = {...f}
+    form.status = 'submitted'
+    const res = await this.apiService.put(`order-cake-notes/${form.id}`, {
+      body: form
+    })
+    if(res.ok) {
+      f.status = form.status
+      itemSliding.close()
     }
   }
 }

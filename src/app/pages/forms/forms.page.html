@@ -11,7 +11,7 @@
       <!-- <ion-button>See All</ion-button> -->
     </ion-list-header>
     
-    <ion-item-sliding *ngFor="let form of data.list;">
+    <ion-item-sliding #itemSliding *ngFor="let form of data.list;">
       <ion-item button (click)="openOrderformPage(form)">
         <div class="icon icon-success me" style="margin: 8px 8px 8px 0;" [attr.name]="form.week_day[0]"></div>
         <ion-label>
@@ -19,12 +19,23 @@
             <h2 style="font-weight: 500;">{{ form.week_day }}</h2>
             <span>{{ form.status }}</span>
           </div>
+          <div style="display: flex; justify-content: space-between">
+            <span>{{ form.qty_order }}</span>
+            <span>{{ form.qty_remain }}</span>
+            <span>{{ form.qty_sold }}</span>
+            <span>{{ form.amount_sold }}</span>
+          </div>
         </ion-label>
       </ion-item>
   
-      <ion-item-options side="end">
+      <ion-item-options side="start">
         <ion-item-option (click)="delete(form.id)" color="danger">
           <ion-icon name="trash" size="large"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+      <ion-item-options side="end" *ngIf="form.status == 'pending'">
+        <ion-item-option color="success" (click)="submit(form, itemSliding)">
+          <ion-icon name="checkmark-done" size="large"></ion-icon>
         </ion-item-option>
       </ion-item-options>
     </ion-item-sliding>

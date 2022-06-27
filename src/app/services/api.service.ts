@@ -41,8 +41,12 @@ export class ApiService {
     return fetch(this.apiUrl + path, opt)
   }
 
-  put() {
-
+  put(path: string, opt: RequestInit = {}) {
+    opt.headers = { ...this.headers(), ...opt.headers },
+    opt.method = 'PUT'
+    opt.body = JSON.stringify(opt.body)
+    if(path.startsWith('http')) throw new Error('Must not start with http')
+    return fetch(this.apiUrl + path, opt)
   }
 
   delete(path: string) {

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController, ModalOptions, NavController } from '@ionic/angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { IonSearchbar, ModalController, ModalOptions, NavController } from '@ionic/angular';
 import { OrderCake, OrdercakeComponent } from 'src/app/components/ordercake/ordercake.component';
 import { TotalComponent } from 'src/app/components/total/total.component';
 import { ApiService, APP_API_PATH } from 'src/app/services/api.service';
@@ -48,22 +48,36 @@ class ResponseData {
   }
 }
 
+interface OrderNote {
+  id?: number
+  status?: string
+  actual_amount?: number
+  order_cake_ids?: number[]
+  week_day?: string
+  qty_order?: number
+  qty_remain?: number
+  qty_sold?: number
+  amount_sold?:number
+}
+
 @Component({
   selector: 'app-orderform',
   templateUrl: './orderform.page.html',
   styleUrls: ['./orderform.page.scss'],
 })
 export class OrderformPage implements OnInit {
+@ViewChild('searchBar', { read: IonSearchbar }) searchBar: IonSearchbar
 
   data: ResponseData
-  searchValue: string
   displayCakeData: CakeData
   displayOrderData: OrderCakeData
   selectedPrice: number | string
   selectedData: number | string
-
-  note_id: number
-
+  
+  note: OrderNote
+  searchValue: string
+  searchEnable: boolean
+  searchTimeout: any
   htmlModal: any;
 
   constructor(
@@ -80,6 +94,7 @@ export class OrderformPage implements OnInit {
     this.searchValue = ''
     this.selectedPrice = 'all'
     this.selectedData = 'orders'
+    this.note = {}
   }
 
   ionViewDidEnter() {
@@ -87,9 +102,8 @@ export class OrderformPage implements OnInit {
   }
   
   async loadData() {
-    this.note_id = await this.storage.getSession('note_id')
-    const note_id = await this.storage.getSession('note_id')
-    const res = await this.api.get(APP_API_PATH + `data?for_page=orderform&order_cake_note_id=${note_id}`)
+    this.note = await this.storage.getSession('note')
+    const res = await this.api.get(APP_API_PATH + `data?for_page=orderform&order_cake_note_id=${this.note.id}`)
     const { data } = await res.json()
     this.data.fromJson(data)
     this.displayCakeData = {...this.data.cakes}
@@ -134,7 +148,7 @@ export class OrderformPage implements OnInit {
 
   async cakeClick(ev, cake) {
     const oc = new OrderCake(cake)
-    oc.order_cake_note_id = this.note_id
+    oc.order_cake_note_id = this.note.id
     await this.storage.saveSession('ordercake-modal', oc)
     const { data } = await this.presentModal({ component: OrdercakeComponent })
     if(data) {
@@ -159,6 +173,14 @@ export class OrderformPage implements OnInit {
     }
   }
 
+  cakeFilter(list) {
+    return list.filter(d => d.name.replace(/ /g, '').toLowerCase().includes(this.searchValue.toLowerCase().replace(/ /g, '')))
+  }
+
+  ordercakeFilter(list) {
+    return list.filter(d => d.cake.name.replace(/ /g, '').toLowerCase().includes(this.searchValue.toLowerCase().replace(/ /g, '')))
+  }
+
   async ordercakeClick(ev, ordercake) {
     await this.storage.saveSession('ordercake-modal', ordercake)
     const { data } = await this.presentModal({ component: OrdercakeComponent })
@@ -169,6 +191,7 @@ export class OrderformPage implements OnInit {
       idx = this.data.orders.group_by_price[ordercake.price_sale].findIndex(oc => oc.cake_id == ordercake.cake_id)
       if(idx > -1) this.data.orders.group_by_price[ordercake.price_sale][idx].from(data)
 
+      this.updateTotal()
     }
   }
 
@@ -195,11 +218,27 @@ export class OrderformPage implements OnInit {
 
     idx = this.data.orders.group_by_price[ordercake.price_sale].findIndex(oc => oc.cake_id == ordercake.cake_id)
     if(idx > -1) this.data.orders.group_by_price[ordercake.price_sale].splice(idx, 1)
+
+    this.updateTotal()
   }
 
   openTotal() {
     this.presentModal({
       component: TotalComponent
     })
+  }
+
+  toggleSearch() {
+    this.searchEnable = !this.searchEnable
+    clearTimeout(this.searchTimeout)
+    if(this.searchEnable) {
+      this.searchTimeout = setTimeout(() => this.searchBar.setFocus(), 300)
+    } else this.searchValue = ''
+  }
+
+  async updateTotal() {
+    const res = await this.api.get(`order-cake-notes/${this.note.id}?except=order_cakes`)
+    if(res.ok)
+      this.note = await res.json()
   }
 }

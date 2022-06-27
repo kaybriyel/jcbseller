@@ -29,7 +29,7 @@
       <ion-button *ngIf="selectList.size && isSelectedAll(price)" (click)="deSelectAll(price)">Deselect All</ion-button>
       <ion-button *ngIf="selectList.size && !isSelectedAll(price)" (click)="selectAll(price)">Select All</ion-button>
     </ion-list-header>
-    <ion-item button *ngFor="let cake of data.group_by_price[price]">
+    <ion-item button *ngFor="let cake of filterCake(data.group_by_price[price])">
       <ion-checkbox *ngIf="selectList.size" checked="{{selectList.has(cake.id)}}" slot="start"></ion-checkbox>
       <!-- <ion-avatar class="avatar-80" slot="start">
         <img [src]="cake.img" />

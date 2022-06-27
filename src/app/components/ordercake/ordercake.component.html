@@ -17,12 +17,12 @@
 
   <ion-item lines="none">
     <ion-label class="input-label" position="stacked">Quantity Order</ion-label>
-    <ion-input type="number" class="radius mt-15" (ionChange)="ordercake.update()"  [(ngModel)]="ordercake.qty_order"></ion-input>
+    <ion-input #inputOrder type="number" class="radius mt-15" (ionChange)="ordercake.update()"  [(ngModel)]="ordercake.qty_order"></ion-input>
   </ion-item>
 
   <ion-item *ngIf="inputRemainVisible" lines="none">
     <ion-label class="input-label" position="stacked">Quantity Remain</ion-label>
-    <ion-input type="number" class="radius mt-15" (ionInput)="input($event)" (ionChange)="ordercake.update()" [(ngModel)]="ordercake.qty_remain"></ion-input>
+    <ion-input #inputRemain type="number" class="radius mt-15" (ionInput)="input($event)" (ionChange)="ordercake.update()" [(ngModel)]="ordercake.qty_remain"></ion-input>
   </ion-item>
 
   <ion-item *ngIf="qtySoldVisible" lines="none">

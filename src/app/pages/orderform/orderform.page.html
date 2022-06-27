@@ -5,8 +5,11 @@
       <ion-segment-button value="orders">Orders</ion-segment-button>
       <ion-segment-button value="cakes">Cakes</ion-segment-button>
     </ion-segment>
+    <ion-icon *ngIf="!searchEnable" slot="end" class="search-btn ml" name="search" (click)="toggleSearch()"></ion-icon>
+    <ion-icon *ngIf="searchEnable" slot="end" class="close-btn ml" name="close" (click)="toggleSearch()"></ion-icon>
   </ion-toolbar>
   <ion-toolbar>
+    <ion-searchbar *ngIf="searchEnable" #searchBar class="round mt pl pr" placeholder="Cohn Shell" [(ngModel)]="searchValue" [debounce]="250"></ion-searchbar>
     <ion-segment scrollable value="{{selectedPrice}}" (ionChange)="priceSegmentChanged($event)">
       <ion-segment-button value="all">
         <ion-label>All</ion-label>
@@ -24,7 +27,7 @@
     <ion-list-header *ngIf="selectedPrice === 'all'">
       <ion-label style="font-weight: 600; font-size: large;">{{ price }}</ion-label>
     </ion-list-header>
-    <ion-item-sliding *ngFor="let cake of displayCakeData.group_by_price[price]">
+    <ion-item-sliding *ngFor="let cake of cakeFilter(displayCakeData.group_by_price[price])">
       <ion-item (click)="cakeClick($event, cake)" button>
         <!-- <ion-avatar class="avatar-80" slot="start">
           <img [src]="cake.img" />
@@ -48,7 +51,7 @@
     <ion-list-header *ngIf="selectedPrice === 'all'">
       <ion-label style="font-weight: 600; font-size: large;">{{ price }}</ion-label>
     </ion-list-header>
-    <ion-item-sliding *ngFor="let ordercake of displayOrderData.group_by_price[price]">
+    <ion-item-sliding *ngFor="let ordercake of ordercakeFilter(displayOrderData.group_by_price[price])">
       <ion-item (click)="ordercakeClick($event, ordercake)" button>
         <!-- <ion-avatar class="avatar-80" slot="start">
           <img [src]="cake.img" />
@@ -79,15 +82,15 @@
 </ion-content>
 <!-- /order list -->
 
-<ion-footer *ngIf="selectedData === 'orders'" class="ion-padding">
+<ion-footer *ngIf="selectedData === 'orders'" class="ion-padding ion-no-border">
   <ion-toolbar (click)="openTotal()">
     <ion-title class="ion-text-center" style="margin-bottom: 16px">Total</ion-title>
     <ion-label>
       <div style="display: flex; justify-content: space-between">
-        <span>1000</span>
-        <span>1000</span>
-        <span>1000</span>
-        <span>100000</span>
+        <span>{{ note.qty_order }}</span>
+        <span>{{ note.qty_remain }}</span>
+        <span>{{ note.qty_sold }}</span>
+        <span>{{ note.amount_sold }}</span>
       </div>
     </ion-label>
   </ion-toolbar>

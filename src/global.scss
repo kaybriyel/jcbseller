@@ -38,6 +38,14 @@
     padding-right: 16px;
 }
 
+.ml {
+  margin-left: 16px;
+}
+
+.mt {
+  margin-top: 16px;
+}
+
 ion-header {
     ion-toolbar {
         ion-title {
@@ -184,3 +192,6 @@ ion-content {
     }
 }
 
+app-orderform {
+  background-color: #f8f8f8;
+}
